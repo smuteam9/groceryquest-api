@@ -26,7 +26,7 @@ PostgreSQL
 
 ## Database setup  
 
-Make sure PostgreSQL is installed and that your user has a role, then  
+Make sure PostgreSQL is installed and that your user has a role, and that you have created a database called "groceryquest", then  
 
 `python manage.py db init`  
 `python manage.py db migrate`  
