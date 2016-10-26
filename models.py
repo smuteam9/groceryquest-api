@@ -51,7 +51,7 @@ class ListItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
     list_id = db.Column(db.Integer, db.ForeignKey('lists.id'))
-    position = db.Column(db.Integer, unique=True)
+    position = db.Column(db.Integer)
 
     def __init__(self, product_id, list_id, position):
         self.product_id = product_id
