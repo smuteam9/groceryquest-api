@@ -35,6 +35,6 @@ db.session.commit()
 # Add some products to list
 cheetos_list_item = ListItem(cheetos.id, grocery_list.id, 1)
 lucky_charms_item = ListItem(cheetos.id, grocery_list.id, 2)
-db.session.add(cheetos_location)
-db.session.add(lucky_charms_location)
+db.session.add(cheetos_list_item)
+db.session.add(lucky_charms_item)
 db.session.commit()
