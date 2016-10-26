@@ -1,4 +1,6 @@
 # This file includes the models for each object mapped to a database table
+from datetime import datetime
+
 from app import db
 
 # User
@@ -33,7 +35,7 @@ class List(db.Model):
 
     items = db.relationship('ListItem', backref='list')
 
-    def __init__(self, title, user_id, store):
+    def __init__(self, title, user_id, store_id):
         self.title = title
         self.user_id = user_id
         self.store_id = store_id
@@ -99,8 +101,8 @@ class Location(db.Model):
     product_id = db.Column(db.ForeignKey('products.id'))
     store_id = db.Column(db.ForeignKey('stores.id'))
 
-    def __init__(self, item, aisle_num, store):
-        self.item = item
+    def __init__(self, product_id, aisle_num, store_id):
+        self.product_id = product_id
         self.store_id = store_id
         self.aisle_num = aisle_num
 
