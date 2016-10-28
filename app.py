@@ -9,7 +9,7 @@ db = SQLAlchemy(app)
 
 from models import *
 
-@app.route('/api')
+@app.route('/api/hello')
 def hello():
     return "Hello World!"
 
