@@ -9,16 +9,15 @@ db = SQLAlchemy(app)
 
 from models import *
 
-@app.route('/')
+@app.route('/api')
 def hello():
     return "Hello World!"
 
 
-@app.route('/autocomplete/<text>')
+@app.route('/api/autocomplete/<text>')
 def autocomplete(text):
     """Query database for autocompletions on list items."""
 
-    #TODO: use params here
     products = Product.query.filter(
             Product.title.like('%{}%'.format(text))).all()
 
