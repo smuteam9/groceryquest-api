@@ -9,9 +9,9 @@ db = SQLAlchemy(app)
 
 from models import *
 
-@app.route('/api/hello')
-def hello():
-    return "Hello World!"
+@app.route('/api/yo')
+def yo():
+    return "yo"
 
 
 @app.route('/api/autocomplete/<text>')
