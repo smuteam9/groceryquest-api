@@ -34,5 +34,7 @@ def autocomplete(text):
 
 
 if __name__ == '__main__':
-    app.run()
+    import logging
+    logging.basicConfig(filename='error.log', level=logging.DEBUG)
+    app.run(host='0.0.0.0')
 
