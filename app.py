@@ -20,7 +20,7 @@ def autocomplete(text):
 
     #TODO: use params here
     products = Product.query.filter(
-            Product.title.like('{}%'.format(text))).all()
+            Product.title.like('%{}%'.format(text))).all()
 
     results = {}
 
