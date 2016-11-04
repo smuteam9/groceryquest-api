@@ -43,6 +43,35 @@ class List(db.Model):
     def __repr__(self):
         return '<id: {}, title: {}>'.format(self.id, self.title)
 
+    def dict(self):
+        """
+        Return grocery list as dict
+        """
+        result = {}
+        result['list_id'] = self.id
+        result['store_id'] = self.store_id
+        result['store'] = Store.query.filter_by(id=self.store_id)\
+                               .first().title
+        
+        result['items'] = [ self._item_details(item) for item in self.items ]
+        return result
+
+    def _item_details(self, item):
+        """
+        Return details of item as dictionary
+        """
+        product = Product.query.filter_by(id=item.product_id).first()
+        location = Location.query.filter_by(product_id=item.product_id,
+                                            store_id=self.store_id).first()
+        result = {}
+        result['item_id'] = self.id
+        result['name'] = product.title
+        result['location'] = location.aisle_num
+        result['position'] = item.position
+        result['product_id'] = item.product_id
+
+        return result
+
 
 # Item in list
 class ListItem(db.Model):
