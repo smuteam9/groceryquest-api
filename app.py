@@ -31,7 +31,13 @@ def autocomplete(text):
     return jsonify(**results)
 
 
+@app.route('/api/lists')
+def get_lists():
+    results = {}
+    current_user = User.query.filter_by(id=1).first()
+    results['lists'] = [l.dict() for l in current_user.lists]
 
+    return jsonify(**results)
 
 
 if __name__ == '__main__':
