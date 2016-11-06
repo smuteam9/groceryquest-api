@@ -50,6 +50,7 @@ class List(db.Model):
         result = {}
         result['list_id'] = self.id
         result['store_id'] = self.store_id
+        result['title'] = self.title
         result['store'] = Store.query.filter_by(id=self.store_id)\
                                .first().title
         result['items'] = [ self._item_details(item) for item in self.items ]
