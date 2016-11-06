@@ -64,8 +64,8 @@ class List(db.Model):
                                             store_id=self.store_id).first()
         result = {}
         result['item_id'] = self.id
-        result['name'] = product.title
-        result['location'] = location.aisle_num
+        result['name'] = item.name or product.title
+        result['location'] = location.aisle_num if location else None
         result['position'] = item.position
         result['product_id'] = item.product_id
 
