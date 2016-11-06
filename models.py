@@ -64,7 +64,7 @@ class List(db.Model):
         location = Location.query.filter_by(product_id=item.product_id,
                                             store_id=self.store_id).first()
         result = {}
-        result['item_id'] = self.id
+        result['item_id'] = item.id
         result['name'] = item.name or product.title
         result['location'] = location.aisle_num if location else None
         result['position'] = item.position
