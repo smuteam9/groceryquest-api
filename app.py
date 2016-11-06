@@ -8,6 +8,7 @@ import os
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///groceryquest'
+app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 CORS(app)
 
@@ -44,11 +45,32 @@ def get_lists():
     return jsonify(**results)
 
 
+@app.route('/api/addlist', methods=['POST'])
+def add_list():
+    """
+    Create an empty list for a user
+    """
+    params = {k: str(v) for k, v in request.get_json().items()}
+    params = {k: cgi.escape(v) for k, v in params.items()}
+
+    grocery_list = List(params['title'],
+                        params['user_id'],
+                        params['store_id'])
+
+    db.session.add(grocery_list)
+    db.session.commit()
+
+    return "list added"
+
+
+
+
+
 @app.route('/api/additem', methods=['POST'])
 def add_item_to_list():
     """
     Add item to grocery list,
-    expecting the following params from POST request:
+    expecting the following params from POST request in json:
 
     user_id
     list_id
@@ -61,7 +83,6 @@ def add_item_to_list():
 
     params = {k: str(v) for k, v in request.get_json().items()}
     params = {k: cgi.escape(v) for k, v in params.items()}
-    print(params)
 
     grocery_list = List.query.filter_by(id=params['list_id'], user_id=1).first()
 
@@ -74,6 +95,8 @@ def add_item_to_list():
     db.session.commit()
 
     return "item added"
+
+
 
 
 if __name__ == '__main__':
