@@ -48,7 +48,7 @@ def get_lists():
 @app.route('/api/addlist', methods=['POST'])
 def add_list():
     """
-    Create an empty list for a user
+    Create an empty list for a user, and return the new list's id
     """
     params = {k: str(v) for k, v in request.get_json().items()}
     params = {k: cgi.escape(v) for k, v in params.items()}
@@ -60,7 +60,7 @@ def add_list():
     db.session.add(grocery_list)
     db.session.commit()
 
-    return "list added"
+    return jsonify(list_id=grocery_list.id)
 
 
 @app.route('/api/removelist', methods=['POST'])
