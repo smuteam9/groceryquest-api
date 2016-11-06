@@ -52,7 +52,6 @@ class List(db.Model):
         result['store_id'] = self.store_id
         result['store'] = Store.query.filter_by(id=self.store_id)\
                                .first().title
-        
         result['items'] = [ self._item_details(item) for item in self.items ]
         return result
 
@@ -81,11 +80,13 @@ class ListItem(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
     list_id = db.Column(db.Integer, db.ForeignKey('lists.id'))
     position = db.Column(db.Integer)
+    name = db.Column(db.String())
 
-    def __init__(self, product_id, list_id, position):
+    def __init__(self, product_id, list_id, position, name):
         self.product_id = product_id
         self.list_id = list_id
         self.position = position
+        self.name = name
 
 
 # Product with UPC code
