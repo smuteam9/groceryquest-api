@@ -111,6 +111,25 @@ def add_item_to_list():
     return "item added"
 
 
+@app.route('/api/removeitem', methods=['POST'])
+def remove_item_from_list():
+    """
+    Remove item from list,
+    expecting the following params POST request in json:
+
+    list_id
+    item_id
+    """
+    params = {k: str(v) for k, v in request.get_json().items()}
+    params = {k: cgi.escape(v) for k, v in params.items()}
+
+    item = ListItem.query.filter_by(id=params['item_id'],
+                                    list_id=params['list_id']).first()
+
+    db.session.delete(item)
+    db.session.commit()
+
+    return "item removed"
 
 
 if __name__ == '__main__':
