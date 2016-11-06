@@ -63,7 +63,21 @@ def add_list():
     return "list added"
 
 
+@app.route('/api/removelist', methods=['POST'])
+def remove_list():
+    """
+    Remove user's list
+    """
+    params = {k: str(v) for k, v in request.get_json().items()}
+    params = {k: cgi.escape(v) for k, v in params.items()}
 
+    grocery_list = List.query.filter_by(id=params['list_id'],
+                                        user_id=params['user_id']).first()
+
+    db.session.delete(grocery_list)
+    db.session.commit()
+
+    return "list removed"
 
 
 @app.route('/api/additem', methods=['POST'])
