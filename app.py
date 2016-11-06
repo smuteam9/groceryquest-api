@@ -34,8 +34,13 @@ def autocomplete(text):
     return jsonify(**results)
 
 
-@app.route('/api/lists')
+@app.route('/api/lists', methods=['POST'])
 def get_lists():
+    """
+    Return lists belonging to a user.
+    Expecting user_id param POST as json
+    """
+
     #TODO: get user id from request
     current_user = User.query.filter_by(id=1).first()
 
@@ -49,6 +54,11 @@ def get_lists():
 def add_list():
     """
     Create an empty list for a user, and return the new list's id
+    Expects the following JSON params:
+
+    title
+    user_id
+    store_id
     """
     params = {k: str(v) for k, v in request.get_json().items()}
     params = {k: cgi.escape(v) for k, v in params.items()}
