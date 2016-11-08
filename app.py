@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 import cgi
+import json
 import os
 
 app = Flask(__name__)
@@ -26,12 +27,12 @@ def autocomplete(text):
     products = Product.query.filter(
             Product.title.like('%{}%'.format(text))).all()
 
-    results = {}
+    results = []
 
     for p in products:
-        results[p.title] = p.upc
+        results.append({p.title: p.upc})
 
-    return jsonify(**results)
+    return json.dumps(results)
 
 
 @app.route('/api/lists', methods=['POST'])
