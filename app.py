@@ -30,7 +30,7 @@ def autocomplete(text):
     results = []
 
     for p in products:
-        results.append({p.title: p.upc})
+        results.append({"name" : p.title, "product_id" : p.upc})
 
     return json.dumps(results)
 
