@@ -51,6 +51,22 @@ def get_lists():
     return jsonify(**results)
 
 
+@app.route('/api/list', methods=['POST'])
+def get_list():
+    """
+    Return list by list_id
+    Expecting user_id and list_id param POST as json
+    """
+    params = {k: str(v) for k, v in request.get_json().items()}
+
+    grocery_list = List.query.filter_by(id=params['list_id'],
+                                        user_id=params['user_id']).first()
+    if grocery_list is None:
+        abort(400)
+
+    return jsonify(**grocery_list.dict())
+
+
 @app.route('/api/addlist', methods=['POST'])
 def add_list():
     """
