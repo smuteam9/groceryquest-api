@@ -74,6 +74,52 @@ def add_list():
     return jsonify(list_id=grocery_list.id)
 
 
+@app.route('/api/updatelist', methods=['POST'])
+def update_list():
+    """
+    Update a list by passing a whole new list
+    to replace with.
+    """
+    params = request.get_json()
+
+    grocery_list = List.query.filter_by(id=params['list_id']).first()
+
+    if grocery_list is None:
+        abort(400)
+
+    # Update name
+    grocery_list.title = params['title']
+
+    # Update store
+    grocery_list.store_id = params['store_id']
+
+    # Delete all items in current list
+    for item in grocery_list.items:
+        db.session.delete(item)
+
+    # Add new items
+    for item in params['items']:
+        product_id = item.get('product_id', None)
+        product_id = cgi.escape(str(product_id)) if product_id else None
+
+        position = cgi.escape(str(item.get('position')))
+
+        name = item.get('name', None)
+        name = cgi.escape(name) if name else None
+
+        new_item = ListItem(product_id,
+                            grocery_list.id,
+                            position,
+                            name)
+
+        db.session.add(new_item)
+
+
+    db.session.commit()
+
+    return "list updated"
+
+
 @app.route('/api/removelist', methods=['POST'])
 def remove_list():
     """
