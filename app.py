@@ -59,8 +59,7 @@ def register_user():
     db.session.add(user)
     db.session.commit()
 
-    # TODO: Return token here
-    return "user registered"
+    return user.generate_auth_token()
 
 
 @app.route('/api/token')
