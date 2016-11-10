@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort, g
+from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -12,12 +13,63 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///groceryquest'
 app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 CORS(app)
+auth = HTTPBasicAuth()
 
 from models import *
 
 @app.route('/api/yo')
 def yo():
     return "yo"
+
+
+@app.route('/api/authtest')
+@auth.login_required
+def authtest():
+    return "yo"
+
+
+@auth.verify_password
+def verify_password(username_or_token, password):
+    # Attempt authentication with token
+    user = User.verify_auth_token(username_or_token)
+    if not user:
+        # Attempt authenticaiton with username and password
+        user = User.query.filter_by(email=username_or_token).first()
+        if not user or not user.verify_password(password):
+            return False
+    g.user = user
+    return True
+
+
+@app.route('/api/register', methods=['POST'])
+def register_user():
+    email = request.json.get('email')
+    password = request.json.get('password')
+
+    # Missing parameters
+    if email is None or password is None:
+        abort(400)
+
+    # User exists
+    if User.query.filter_by(email=email).first() is not None:
+        abort(400)
+
+    user = User(email=email)
+    user.hash_password(password)
+    db.session.add(user)
+    db.session.commit()
+
+    # TODO: Return token here
+    return "user registered"
+
+
+@app.route('/api/token')
+@auth.login_required
+def get_auth_token():
+    """
+    """
+    token = g.user.generate_auth_token()
+    return jsonify({ 'token': token.decode('ascii') })
 
 
 @app.route('/api/autocomplete/<text>')
