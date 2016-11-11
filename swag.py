@@ -13,7 +13,7 @@ def register():
         tup = _saltHash(request.form['password'])
         hashedPassword = tup[0]
         salt = tup[1]
-        cursor = conn.execute("INSERT INTO Users VALUES (NULL, ? , ? , ? , ? , ?)", (request.form['username'], hashedPassword, salt, request.form['isBuyer'], request.form['isSeller']))
+        cursor = conn.execute("INSERT INTO Users VALUES (NULL, ? , ? , ?)", (request.form['username'], hashedPassword, salt))
         conn.commit()
         conn.close()
         return ""
