@@ -73,7 +73,14 @@ def get_auth_token():
 
 @app.route('/api/autocomplete/<text>')
 def autocomplete(text):
-    """Query database for autocompletions on list items."""
+    """
+    Expects store_id as GET parameter
+    Query database for autocompletions on list items.
+    """
+    store_id = request.args.get('store_id', '')
+
+    if not store_id:
+        abort(400)
 
     products = Product.query.filter(
             Product.title.like('%{}%'.format(text))).all()
@@ -81,7 +88,11 @@ def autocomplete(text):
     results = []
 
     for p in products:
-        results.append({"name" : p.title, "product_id" : p.upc})
+        location = Location.query.filter_by(product_id=p.id,
+                                            store_id=store_id).first()
+        results.append({"name" : p.title,
+                        "product_id" : p.upc,
+                        "aisle_num" : location.aisle_num})
 
     return json.dumps(results)
 
