@@ -121,7 +121,6 @@ def get_list():
     Return list by list_id
     Expecting the following JSON params
 
-    user_id
     list_id
 
     and token in Authorization Header
