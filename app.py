@@ -93,7 +93,8 @@ def autocomplete(text):
                                             store_id=store_id).first()
         results.append({"name" : p.title,
                         "product_id" : p.upc,
-                        "aisle_num" : location.aisle_num})
+                        "aisle_num" : location.aisle_num \
+                                if location else None})
 
     return json.dumps(results)
 
