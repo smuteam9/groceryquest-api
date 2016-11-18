@@ -45,6 +45,8 @@ def verify_password(username_or_token, password):
 def register_user():
     email = request.json.get('email')
     password = request.json.get('password')
+    first_name = request.json.get('first_name')
+    last_name = request.json.get('last_name')
 
     # Missing parameters
     if email is None or password is None:
@@ -56,6 +58,8 @@ def register_user():
 
     user = User(email=email)
     user.hash_password(password)
+    user.first_name = first_name
+    user.last_name = last_name
     db.session.add(user)
     db.session.commit()
 
