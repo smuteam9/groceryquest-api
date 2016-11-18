@@ -299,6 +299,19 @@ def remove_item_from_list():
     return "item removed"
 
 
+@app.route('/api/profile')
+@auth.login_required
+def get_profile():
+    """
+    Expects token and returns user profile
+    info (first and last name)
+    """
+    result = {'first_name': g.user.first_name,
+              'last_name': g.user.last_name}
+
+    return jsonify(**result)
+
+
 if __name__ == '__main__':
     import logging
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
