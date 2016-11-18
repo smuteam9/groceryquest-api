@@ -307,7 +307,8 @@ def get_profile():
     info (first and last name)
     """
     result = {'first_name': g.user.first_name,
-              'last_name': g.user.last_name}
+              'last_name': g.user.last_name,
+              'email': g.user.email}
 
     return jsonify(**result)
 
