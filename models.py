@@ -150,7 +150,7 @@ class Store(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String())
-    # address, zip code, etc.
+    address = db.Column(db.String())
 
     def __init__(self, title):
         self.title = title
