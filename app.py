@@ -73,6 +73,12 @@ def get_auth_token():
     """
     """
     token = g.user.generate_auth_token()
+
+    # Create timestamp entry for heat map
+    timestamp = LoginTimestamp(g.user.id)
+    db.session.add(timestamp)
+    db.session.commit()
+
     return jsonify({ 'token': token.decode('ascii') })
 
 
@@ -308,7 +314,8 @@ def get_profile():
     """
     result = {'first_name': g.user.first_name,
               'last_name': g.user.last_name,
-              'email': g.user.email}
+              'email': g.user.email,
+              'heatmap': g.user.get_last_login_days()}
 
     return jsonify(**result)
 

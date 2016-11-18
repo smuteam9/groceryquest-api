@@ -24,6 +24,7 @@ class User(db.Model):
     registered_on = db.Column(db.DateTime)
 
     lists = db.relationship('List', backref='user')
+    login_timestamps = db.relationship('LoginTimestamp', backref='user')
 
     def __init__(self, email, password=None):
         self.email = email
@@ -43,6 +44,19 @@ class User(db.Model):
         return pwd_context.verify(password, self.password_hash)
 
 
+    def get_last_login_days(self):
+        """
+        Get user's login timestamps, convert to
+        delta of days since today
+        """
+        return list(set(map(
+            lambda time: time.timestamp.timetuple().tm_yday,
+            self.login_timestamps)))
+
+    #################
+    # Token methods #
+    #################
+
     def generate_auth_token(self, expiration=86400):
         s = Serializer("changeme", expires_in=expiration)
         return s.dumps({ 'id': self.id })
@@ -61,6 +75,19 @@ class User(db.Model):
             return None
         user = User.query.get(data['id'])
         return user
+
+
+# User login timestamps (for heat map)
+class LoginTimestamp(db.Model):
+    __tablename__ = "login_timestamps"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    timestamp = db.Column(db.DateTime)
+
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.timestamp = datetime.utcnow()
 
 
 # Grocery lists
