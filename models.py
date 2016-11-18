@@ -43,7 +43,7 @@ class User(db.Model):
         return pwd_context.verify(password, self.password_hash)
 
 
-    def generate_auth_token(self, expiration=600):
+    def generate_auth_token(self, expiration=86400):
         s = Serializer("changeme", expires_in=expiration)
         return s.dumps({ 'id': self.id })
 
