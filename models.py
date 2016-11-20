@@ -73,6 +73,8 @@ class User(db.Model):
 	# Invalid token
         except BadSignature:
             return None
+        except:
+            return None
         user = User.query.get(data['id'])
         return user
 
