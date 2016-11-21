@@ -324,6 +324,19 @@ def get_profile():
     return jsonify(**result)
 
 
+@app.route('/api/stores')
+def get_stores():
+    """
+    Return list of stores
+    """
+    result = []
+    for store in Store.query.all():
+        result.append({"store_id": store.id,
+                       "title": store.title,
+                       "address": store.address})
+
+    return json.dumps(result)
+
 if __name__ == '__main__':
     import logging
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
