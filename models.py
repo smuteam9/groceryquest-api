@@ -180,12 +180,32 @@ class Store(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String())
     address = db.Column(db.String())
+    hours = db.relationship('StoreHour', backref='store')
 
     def __init__(self, title):
         self.title = title
 
     def __repr__(self):
         return '<id: {}, title: {}>'.format(self.id, self.title)
+
+
+# Busyness by hour for a store
+class StoreHour(db.Model):
+    __tablename__ = 'storehours'
+
+    id = db.Column(db.Integer, primary_key=True)
+    store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))
+    hour = db.Column(db.Integer)
+    busyness = db.Column(db.Integer)
+
+    def __init__(self, store_id, hour, busyness):
+        self.store_id = store_id
+        self.hour = hour
+        self.busyness = busyness
+
+    def __repr__(self):
+        return '<id: {}, store_id: {}, hour: {}, busyness: {}>'.format(
+                self.id, self.store_id, self.hour, self.busyness)
 
 
 # Location of item in store
