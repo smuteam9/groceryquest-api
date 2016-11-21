@@ -337,6 +337,23 @@ def get_stores():
 
     return json.dumps(result)
 
+@app.route('/api/store', methods=['POST'])
+def get_store():
+    """
+    Return store information
+    """
+    params = {k: str(v) for k, v in request.get_json().items()}
+    params = {k: cgi.escape(v) for k, v in params.items()}
+
+    # Missing store id
+    if not params.get('store_id', None):
+        abort(400)
+
+
+
+
+
+
 if __name__ == '__main__':
     import logging
     logging.basicConfig(filename='error.log', level=logging.DEBUG)

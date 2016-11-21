@@ -180,13 +180,21 @@ class Store(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String())
     address = db.Column(db.String())
-    hours = db.relationship('StoreHour', backref='store')
+    hours = db.relationship('StoreHour', backref='store',
+            order_by='StoreHour.hour')
 
     def __init__(self, title):
         self.title = title
 
     def __repr__(self):
         return '<id: {}, title: {}>'.format(self.id, self.title)
+
+    def dict(self):
+        return {'store_id': self.id,
+                'store': self.title,
+                'address': self.address,
+                'busyness': list(map(lambda h: h.busyness, self.hours))}
+
 
 
 # Busyness by hour for a store
