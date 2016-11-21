@@ -337,6 +337,7 @@ def get_stores():
 
     return json.dumps(result)
 
+
 @app.route('/api/store', methods=['POST'])
 def get_store():
     """
@@ -349,7 +350,9 @@ def get_store():
     if not params.get('store_id', None):
         abort(400)
 
+    store = Store.query.filter_by(id=params['store_id']).first()
 
+    return jsonify(**store.dict())
 
 
 
