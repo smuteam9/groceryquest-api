@@ -102,7 +102,7 @@ def autocomplete(text):
         location = Location.query.filter_by(product_id=p.id,
                                             store_id=store_id).first()
         results.append({"name" : p.title,
-                        "product_id" : p.upc,
+                        "product_id" : p.id,
                         "aisle_num" : location.aisle_num \
                                 if location else None})
 
