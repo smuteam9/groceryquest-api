@@ -180,6 +180,10 @@ def update_list():
     """
     params = request.get_json()
 
+    # List id missing
+    if not params.get('list_id', None):
+        abort(400)
+
     grocery_list = List.query.filter_by(id=params['list_id']).first()
 
     # Couldn't find grocery list
