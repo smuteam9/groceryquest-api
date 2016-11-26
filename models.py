@@ -174,6 +174,23 @@ class Product(db.Model):
         return '<id: {}, title: {}>'.format(self.id, self.title)
 
 
+class ProductPrice(db.Model):
+    __tablename__ = 'productprices'
+
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.ForeignKey('products.id'))
+    store_id = db.Column(db.ForeignKey('stores.id'))
+
+    def __init__(self, product_id, store_id, price):
+        self.product_id = product_id
+        self.store_id = store_id
+        self.price = price
+
+    def __repr__(self):
+        return '<id: {}, product_id: {}, store_id: {}, price: {}'.format(
+                self.id, self.product_id, self.store_id, self.price)
+
+
 class Store(db.Model):
     __tablename__ = 'stores'
 
