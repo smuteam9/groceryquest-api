@@ -131,12 +131,15 @@ class List(db.Model):
         product = Product.query.filter_by(id=item.product_id).first()
         location = Location.query.filter_by(product_id=item.product_id,
                                             store_id=self.store_id).first()
+        price = ProductPrice.query.filter_by(product_id=item.product_id,
+                                             store_id=self.store_id).first()
         result = {}
         result['item_id'] = item.id
         result['name'] = item.name or product.title
         result['location'] = location.aisle_num if location else None
         result['position'] = item.position
         result['product_id'] = item.product_id
+        result['price'] = price.price if price else None
 
         return result
 
@@ -166,12 +169,30 @@ class Product(db.Model):
     title = db.Column(db.String())
     upc = db.Column(db.Integer, unique=True)
 
-    def __init__(self, title, upc):
+    def __init__(self, title, upc=None):
         self.title = title
         self.upc = upc
 
     def __repr__(self):
         return '<id: {}, title: {}>'.format(self.id, self.title)
+
+
+class ProductPrice(db.Model):
+    __tablename__ = 'productprices'
+
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.ForeignKey('products.id'))
+    store_id = db.Column(db.ForeignKey('stores.id'))
+    price = db.Column(db.Float)
+
+    def __init__(self, product_id, store_id, price):
+        self.product_id = product_id
+        self.store_id = store_id
+        self.price = price
+
+    def __repr__(self):
+        return '<id: {}, product_id: {}, store_id: {}, price: {}'.format(
+                self.id, self.product_id, self.store_id, self.price)
 
 
 class Store(db.Model):
