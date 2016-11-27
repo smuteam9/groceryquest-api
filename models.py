@@ -23,7 +23,7 @@ class User(db.Model):
     password_hash = db.Column(db.String())
     registered_on = db.Column(db.DateTime)
 
-    lists = db.relationship('List', backref='user')
+    lists = db.relationship('List', backref='user', order_by='List.store_id')
     login_timestamps = db.relationship('LoginTimestamp', backref='user')
 
     def __init__(self, email, password=None):
@@ -135,7 +135,7 @@ class List(db.Model):
                                              store_id=self.store_id).first()
         result = {}
         result['item_id'] = item.id
-        result['name'] = item.name or product.title if product else None
+        result['name'] = item.name or product.title
         result['location'] = location.aisle_num if location else None
         result['position'] = item.position
         result['product_id'] = item.product_id
