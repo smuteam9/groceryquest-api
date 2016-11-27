@@ -166,7 +166,7 @@ class Product(db.Model):
     title = db.Column(db.String())
     upc = db.Column(db.Integer, unique=True)
 
-    def __init__(self, title, upc):
+    def __init__(self, title, upc=None):
         self.title = title
         self.upc = upc
 
