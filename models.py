@@ -180,6 +180,7 @@ class ProductPrice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.ForeignKey('products.id'))
     store_id = db.Column(db.ForeignKey('stores.id'))
+    price = db.Column(db.Float)
 
     def __init__(self, product_id, store_id, price):
         self.product_id = product_id
