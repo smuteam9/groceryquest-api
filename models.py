@@ -135,7 +135,7 @@ class List(db.Model):
                                              store_id=self.store_id).first()
         result = {}
         result['item_id'] = item.id
-        result['name'] = item.name or product.title
+        result['name'] = item.name or product.title if product else None
         result['location'] = location.aisle_num if location else None
         result['position'] = item.position
         result['product_id'] = item.product_id
