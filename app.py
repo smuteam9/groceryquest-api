@@ -109,10 +109,13 @@ def autocomplete(text):
     for p in products:
         location = Location.query.filter_by(product_id=p.id,
                                             store_id=store_id).first()
+        price = ProductPrice.query.filter_by(product_id=p.id).first()
         results.append({"name" : p.title,
                         "product_id" : p.id,
                         "aisle_num" : location.aisle_num \
-                                if location else None})
+                                if location else None,
+                        "price" : price.price \
+                                if price else None});
 
     return json.dumps(results)
 
