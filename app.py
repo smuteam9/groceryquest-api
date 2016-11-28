@@ -94,7 +94,7 @@ def autocomplete(text):
         abort(400)
 
     products = Product.query.filter(
-            Product.title.like('%{}%'.format(text))).all()
+            Product.title.ilike('%{}%'.format(text))).all()
 
     results = []
 
