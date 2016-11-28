@@ -52,6 +52,14 @@ def register_user():
     if email is None or password is None:
         abort(400)
 
+    email = cgi.escape(email)
+
+    if first_name:
+        first_name = cgi.escape(first_name)
+
+    if last_name:
+        last_name = cgi.escape(last_name)
+
     # User exists
     if User.query.filter_by(email=email).first() is not None:
         abort(400)
@@ -195,10 +203,10 @@ def update_list():
         abort(400)
 
     # Update name
-    grocery_list.title = params['title']
+    grocery_list.title = cgi.escape(params['title'])
 
     # Update store
-    grocery_list.store_id = params['store_id']
+    grocery_list.store_id = cgi.escape(params['store_id'])
 
     # Delete all items in current list
     for item in grocery_list.items:
@@ -344,7 +352,6 @@ def get_store():
     Return store information
     """
     params = {k: str(v) for k, v in request.get_json().items()}
-    params = {k: cgi.escape(v) for k, v in params.items()}
 
     # Missing store id
     if not params.get('store_id', None):
