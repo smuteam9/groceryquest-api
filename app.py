@@ -184,7 +184,7 @@ def update_list():
     grocery_list.title = cgi.escape(params['title'])
 
     # Update store
-    grocery_list.store_id = cgi.escape(params['store_id'])
+    grocery_list.store_id = cgi.escape(str(params['store_id']))
 
     # Delete all items in current list
     for item in grocery_list.items:
