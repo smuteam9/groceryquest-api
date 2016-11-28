@@ -52,6 +52,14 @@ def register_user():
     if email is None or password is None:
         abort(400)
 
+    email = cgi.escape(email)
+
+    if first_name:
+        first_name = cgi.escape(first_name)
+
+    if last_name:
+        last_name = cgi.escape(last_name)
+
     # User exists
     if User.query.filter_by(email=email).first() is not None:
         abort(400)
@@ -101,10 +109,13 @@ def autocomplete(text):
     for p in products:
         location = Location.query.filter_by(product_id=p.id,
                                             store_id=store_id).first()
+        price = ProductPrice.query.filter_by(product_id=p.id).first()
         results.append({"name" : p.title,
                         "product_id" : p.id,
                         "aisle_num" : location.aisle_num \
-                                if location else None})
+                                if location else None,
+                        "price" : price.price \
+                                if price else None});
 
     return json.dumps(results)
 
@@ -146,31 +157,6 @@ def get_list():
     return jsonify(**grocery_list.dict())
 
 
-@app.route('/api/addlist', methods=['POST'])
-@auth.login_required
-def add_list():
-    """
-    Create an empty list for a user, and return the new list's id
-    Expects the following JSON params:
-
-    title
-    store_id
-
-    and token in Authorization Header
-    """
-    params = {k: str(v) for k, v in request.get_json().items()}
-    params = {k: cgi.escape(v) for k, v in params.items()}
-
-    grocery_list = List(params['title'],
-                        g.user.id,
-                        params['store_id'])
-
-    db.session.add(grocery_list)
-    db.session.commit()
-
-    return jsonify(list_id=grocery_list.id)
-
-
 @app.route('/api/updatelist', methods=['POST'])
 @auth.login_required
 def update_list():
@@ -195,10 +181,10 @@ def update_list():
         abort(400)
 
     # Update name
-    grocery_list.title = params['title']
+    grocery_list.title = cgi.escape(params['title'])
 
     # Update store
-    grocery_list.store_id = params['store_id']
+    grocery_list.store_id = cgi.escape(params['store_id'])
 
     # Delete all items in current list
     for item in grocery_list.items:
@@ -243,42 +229,6 @@ def remove_list():
     db.session.commit()
 
     return "list removed"
-
-
-@app.route('/api/additem', methods=['POST'])
-@auth.login_required
-def add_item_to_list():
-    """
-    Add item to grocery list,
-    expecting the following params from POST request in json:
-
-    user_id
-    list_id
-    position
-    product_id (optional)
-    name
-    """
-    #TODO: assert parameters
-
-    params = {k: str(v) for k, v in request.get_json().items()}
-    params = {k: cgi.escape(v) for k, v in params.items()}
-
-    grocery_list = List.query.filter_by(id=params['list_id'],
-                                        user_id=g.user.id).first()
-
-    # Couldn't find grocery list
-    if grocery_list is None:
-        abort(400)
-
-    product_id = params.get('product_id', None)
-
-    item = ListItem(product_id, grocery_list.id,
-                    params['position'], params['name'])
-
-    db.session.add(item)
-    db.session.commit()
-
-    return "item added"
 
 
 @app.route('/api/removeitem', methods=['POST'])
@@ -344,7 +294,6 @@ def get_store():
     Return store information
     """
     params = {k: str(v) for k, v in request.get_json().items()}
-    params = {k: cgi.escape(v) for k, v in params.items()}
 
     # Missing store id
     if not params.get('store_id', None):
